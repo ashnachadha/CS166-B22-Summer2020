@@ -391,6 +391,15 @@ public class MechanicShop{
                 }catch (Exception e) {
                         System.err.println (e.getMessage());
                 }
+
+		try{
+			String query2 = "SELECT * FROM Customer WHERE id = ";
+			query2 += ID;
+
+			esql.executeQueryAndPrintResult(query2);
+		} catch(Exception e) {
+			System.err.println(e.getMessage());
+		}
 	}
 	
 	public static void AddMechanic(MechanicShop esql){//2
@@ -444,7 +453,7 @@ public class MechanicShop{
         	int experience;
         
         	do{
-                	System.out.print("Enter employee's experience(number of years): "
+                	System.out.print("Enter employee's experience(number of years): ");
                 	try{
             
                         	experience = Integer.parseInt(in.readLine());
@@ -463,6 +472,15 @@ public class MechanicShop{
         	}catch (Exception e) {
                 	System.err.println (e.getMessage());
         	}
+
+		try{
+			String query2 = "SELECT * FROM Mechanic WHERE id = ";
+			query2 += ID;
+
+			esql.executeQueryAndPrintResult(query2);
+		} catch(Exception e) {
+			System.err.println(e.getMessage());
+		}
 	}
 	
 	public static void AddCar(MechanicShop esql){//3
@@ -527,17 +545,28 @@ public class MechanicShop{
                 } while(true);
 
                 try{
-                        String query = "INSERT INTO Car(vin, make, model, year) VALUES(\'" + in1 + "\',\'" + in2 + "\',\'" + in3 + "\'," + in4 +")";
-                        esql.executeUpdate(query);
+                        String query = "INSERT INTO Car (vin, make, model, year) VALUES (\'" + in1 + "\', \'" + in2 + "\',\'" + in3 + "\'," + in4 +")";
+			System.out.println(query);                       
+		//	String query = "INSERT INTO Customer (id, fname, lname, phone, address) VALUES (" + ID + ", \'" + first_name + "\', \'" + last_name + "\',  \'" + phone_num  + "\',  \'" + address + "\' );";
+
+
+
+
+
+
+ 			esql.executeUpdate(query);
                 } catch(Exception e) {
                         System.err.println(e.getMessage());
                 }
 
 		try{
 			String query2 = "SELECT * FROM Car WHERE vin = ";
-			query2 += in1;
+			query2 += "\'" +  in1 + "\'";
 
-			esql.executeQuery(query2);
+			esql.executeQueryAndPrintResult(query2);
+		} catch(Exception e) {
+			System.err.println(e.getMessage());
+		}
 
 	}
 	
@@ -564,11 +593,9 @@ public class MechanicShop{
 	public static void ListCustomersWithMoreThan20Cars(MechanicShop esql){//7
 		try{
 			String query = "SELECT fname, lname FROM Customer WHERE id IN (SELECT customer_id FROM Owns GROUP BY customer_id HAVING COUNT(customer_id) > 20)";
-			
-			int rowCount = esql.executeQuery(query);
+			int rowCount = esql.executeQueryAndPrintResult(query);
 			System.out.println("total row(s): " + rowCount);
 
-			esql.executeQueryAndPrintResult(query);
 		} catch(Exception e) {
 			System.err.println(e.getMessage());
 		}
