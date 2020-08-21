@@ -546,15 +546,9 @@ public class MechanicShop{
 
                 try{
                         String query = "INSERT INTO Car (vin, make, model, year) VALUES (\'" + in1 + "\', \'" + in2 + "\',\'" + in3 + "\'," + in4 +")";
-			System.out.println(query);                       
-		//	String query = "INSERT INTO Customer (id, fname, lname, phone, address) VALUES (" + ID + ", \'" + first_name + "\', \'" + last_name + "\',  \'" + phone_num  + "\',  \'" + address + "\' );";
-
-
-
-
-
-
+			System.out.println(query);
  			esql.executeUpdate(query);
+
                 } catch(Exception e) {
                         System.err.println(e.getMessage());
                 }
@@ -571,7 +565,22 @@ public class MechanicShop{
 	}
 	
 	public static void InsertServiceRequest(MechanicShop esql){//4
-		
+		try{
+			String last_name;
+
+			System.out.println("\tEnter last name: ");
+			last_name = in.readLine();
+
+			String query = "SELECT * FROM Customer WHERE lname = ";
+			query += "\'" + last_name + "\'";
+
+			esql.executeQueryAndPrintResult(query);			
+
+		} catch(Exception e) {
+			System.err.println(e.getMessage());
+		}
+
+
 	}
 	
 	public static void CloseServiceRequest(MechanicShop esql) throws Exception{//5
