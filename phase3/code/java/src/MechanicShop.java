@@ -568,13 +568,21 @@ public class MechanicShop{
 		try{
 			String last_name;
 
-			System.out.println("\tEnter last name: ");
+			System.out.print("\tEnter last name: ");
 			last_name = in.readLine();
 
 			String query = "SELECT * FROM Customer WHERE lname = ";
 			query += "\'" + last_name + "\'";
 
-			esql.executeQueryAndPrintResult(query);			
+			int rowCount = esql.executeQueryAndPrintResult(query);
+			System.out.println("total row(s): " + rowCount);
+
+			if(rowCount = 0) {
+				//add new customer
+			}
+			else {
+				//choose from existing or add new 
+			} 			
 
 		} catch(Exception e) {
 			System.err.println(e.getMessage());
