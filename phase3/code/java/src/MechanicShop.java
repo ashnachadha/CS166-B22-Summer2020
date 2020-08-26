@@ -573,25 +573,25 @@ public class MechanicShop{
 			esql.executeQueryAndPrintResult(query);
 
 			int customerExists = esql.executeQuery(query); 
-			if (customerExists != 0){ 
+			if (customerExists != 0){
+				String user_input; 
 				do{
-					System.out.println("Do you want to add a new customer? (y/n)");
-					String user_input = in.readLine();
-					if(user_input.equals("y") || user_input.equals("Y")) {
+					System.out.println("Choose an option below:\n 1. Select an existing customer\n 2. Create a new customer\n ");
+					user_input = in.readLine();
+					switch(user_input) {
+						case "1":
+						System.out.println("Enter the customer ID: ");
+						cust_ID = in.readLine();
+						break;
+						case "2":
 						AddCustomer(esql);
 						System.out.println("Enter the customer ID: ");
 						cust_ID = in.readLine();
 						break;
-					}
-					else if (user_input.equals("n") || user_input.equals("N")) {
-						System.out.println("Enter the customer ID: ");
-						cust_ID = in.readLine();
-						break;
-					}
-					else {
+						default :
 						System.out.println("Invalid input");
 					}
-				} while (true);
+				} while (!(user_input.equals("1")) && !(user_input.equals("2")));
 			}
 			else{ 
 				System.out.println("There are no customers with that last name. Please add a new customer.");
