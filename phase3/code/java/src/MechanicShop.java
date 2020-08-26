@@ -388,18 +388,15 @@ public class MechanicShop{
       			String query = "INSERT INTO Customer (id, fname, lname, phone, address) VALUES (" + ID + ", \'" + first_name + "\', \'" + last_name + "\',  \'" + phone_num  + "\',  \'" + address + "\' );";
 
                         esql.executeUpdate(query);
+			System.out.println("---------------------------------------------------------");
+			System.out.println("New customer added.");
+			query = "SELECT * FROM Customer WHERE id ='";
+			query += ID + "';";
+			esql.executeQueryAndPrintResult(query);
+			System.out.println("---------------------------------------------------------");
                 }catch (Exception e) {
                         System.err.println (e.getMessage());
                 }
-
-		try{
-			String query2 = "SELECT * FROM Customer WHERE id = ";
-			query2 += ID;
-
-			esql.executeQueryAndPrintResult(query2);
-		} catch(Exception e) {
-			System.err.println(e.getMessage());
-		}
 	}
 	
 	public static void AddMechanic(MechanicShop esql){//2
@@ -469,18 +466,15 @@ public class MechanicShop{
                 	String query = "INSERT INTO Mechanic (id, fname, lname, experience) VALUES (" + ID + ", \'" + first_name + "\', \'" + last_name + "\',  " + experience  + " );";
                         
                         esql.executeUpdate(query);
+			System.out.println("------------------------------------------------------");
+			System.out.println("New Mechanic added.");
+			query = "SELECT * FROM Mechanic WHERE id='";
+			query += ID + "';";
+			esql.executeQueryAndPrintResult(query);
+			System.out.println("------------------------------------------------------");
         	}catch (Exception e) {
                 	System.err.println (e.getMessage());
         	}
-
-		try{
-			String query2 = "SELECT * FROM Mechanic WHERE id = ";
-			query2 += ID;
-
-			esql.executeQueryAndPrintResult(query2);
-		} catch(Exception e) {
-			System.err.println(e.getMessage());
-		}
 	}
 	
 	public static void AddCar(MechanicShop esql){//3
@@ -554,10 +548,12 @@ public class MechanicShop{
                 }
 
 		try{
+			System.out.println("-------------------------------------------");
+			System.out.println("New Car added.");
 			String query2 = "SELECT * FROM Car WHERE vin = ";
 			query2 += "\'" +  in1 + "\'";
-
 			esql.executeQueryAndPrintResult(query2);
+			System.out.println("--------------------------------------------");
 		} catch(Exception e) {
 			System.err.println(e.getMessage());
 		}
@@ -583,6 +579,8 @@ public class MechanicShop{
 					String user_input = in.readLine();
 					if(user_input.equals("y") || user_input.equals("Y")) {
 						AddCustomer(esql);
+						System.out.println("Enter the customer ID: ");
+						cust_ID = in.readLine();
 						break;
 					}
 					else if (user_input.equals("n") || user_input.equals("N")) {
@@ -602,14 +600,13 @@ public class MechanicShop{
 				cust_ID = in.readLine();
 			}	
 			
-			
 			query = "SELECT * FROM Owns WHERE customer_id='";
 			query += cust_ID + "';";
 				
 			esql.executeQueryAndPrintResult(query);
-
+		
 			int carExists = esql.executeQuery(query); 
-				
+			
 			if (carExists !=0){
 				System.out.println("Enter the VIN: ");
 				car_ID = in.readLine();
@@ -628,9 +625,11 @@ public class MechanicShop{
 			query = "SELECT * FROM Owns WHERE car_vin='";
 			query += car_ID + "' AND customer_id='";
 			query += cust_ID + "';";
+			//esql.executeQueryAndPrintResult(query);
 				
 			int owns = esql.executeQuery(query);
-			if (owns != 0){
+			//System.out.println(owns);
+			//if (owns != 0){
 				query = "INSERT INTO Service_Request(rid, customer_id, car_vin, date, odometer, complain) VALUES ('";
 				System.out.println("Enter the Service Request ID: ");
 				int rid = Integer.parseInt(in.readLine());
@@ -652,10 +651,10 @@ public class MechanicShop{
 				esql.executeQueryAndPrintResult(query);
 				System.out.println("------------------------------------------------");
 	
-			}
-			else { 
-				System.out.println("This customer doesn't own this car");
-			}
+			//}
+			//else { 
+			//	System.out.println("This customer doesn't own this car");
+			//}
 		} catch(Exception e){
 				System.err.println(e.getMessage());
 		}
