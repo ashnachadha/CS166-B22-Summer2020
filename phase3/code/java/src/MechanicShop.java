@@ -23,6 +23,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.ArrayList;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * This class defines a simple embedded SQL utility class that is designed to
@@ -562,7 +565,9 @@ public class MechanicShop{
 	
 	public static void InsertServiceRequest(MechanicShop esql){//4
 		try{
-        		String todaysdate = "2020-08-25";
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/YYY");
+			LocalDateTime now = LocalDateTime.now();
+        		String todaysdate = dtf.format(now);
 			String cust_ID="";
 			String car_ID="";
 			System.out.print("Enter the last name of the customer: ");
@@ -571,7 +576,7 @@ public class MechanicShop{
 			query += lastName + "';";
 
 			esql.executeQueryAndPrintResult(query);
-
+			
 			int customerExists = esql.executeQuery(query); 
 			if (customerExists != 0){
 				String user_input; 
@@ -610,22 +615,26 @@ public class MechanicShop{
 			if (carExists !=0){
 				System.out.println("Enter the VIN: ");
 				car_ID = in.readLine();
-				query = "SELECT COUNT(ownership_id) FROM Owns";
+				query = "SELECT * FROM Owns";
 				int maxOwnership = esql.executeQuery(query);
 				query = "INSERT INTO Owns(ownership_id, customer_id, car_vin) VALUES ( " + maxOwnership  + ", " + cust_ID + "," + car_ID + ");";
-
+				//esql.executeUpdate(query);
 			}
 			else { 
 				System.out.println("The customer doesn't own a car. Please add a new car.");
 				AddCar(esql);
 				System.out.println("Reenter the VIN: ");
 				car_ID = in.readLine();
+				query = "SELECT * FROM Owns";
+                                int maxOwnership = esql.executeQuery(query);
+                                query = "INSERT INTO Owns(ownership_id, customer_id, car_vin) VALUES ( " + maxOwnership  + ", " + cust_ID + "," + car_ID + ");";
+				//esql.executeUpdate(query);
 			}	
 			
 			query = "SELECT * FROM Owns WHERE car_vin='";
 			query += car_ID + "' AND customer_id='";
 			query += cust_ID + "';";
-			//esql.executeQueryAndPrintResult(query);
+			esql.executeQueryAndPrintResult(query);
 				
 			int owns = esql.executeQuery(query);
 			//System.out.println(owns);
@@ -663,10 +672,21 @@ public class MechanicShop{
 	public static void CloseServiceRequest(MechanicShop esql) throws Exception{//5
 		try{
 			String query;
-			//String query = "SELECT * FROM Service_Request";
-			//esql.executeQueryAndPrintResult(query);
 
-			String wid,rid, mid, comments, closingdate = "2020-26-08";
+			String wid,rid, mid, comments;
+
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/YYY");
+			LocalDateTime now = LocalDateTime.now();
+			String closingdate = dtf.format(now);
+
+			do{
+				query = "SELECT date FROM Service_Request WHERE date <= '" + closingdate + "';";
+				int validDate = esql.executeQuery(query);
+				if(validDate == 0) { throw new RuntimeException("Closing date can't be before request date");
+				}
+				else break;
+			} while(true);
+
 			int bill;
 			do {
                 		System.out.print("Enter the service request ID: ");
